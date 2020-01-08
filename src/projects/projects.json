@@ -1,0 +1,78 @@
+[
+    {
+        "name": "eleanor",
+        "surname": "rigby",
+        "email": "erigby@planetarysolutions.com",
+        "dateOfBirth": 28011988
+    },
+
+    {
+        "name": "Gary",
+        "surname": "McFarland",
+        "email": "gary@FarlandFutureFarms.com",
+        "dateOfBirth": 14021972
+    },
+
+    {
+        "name": "Pimkie",
+        "surname": "rodgers",
+        "email": "pimpim@rebellionextinction.com",
+        "dateOfBirth": 22081990
+    },
+
+    {
+        "description": "this will not be published anytime soon"
+    },
+    {
+        "numberofprojects": 442,
+        "NumberOfProjects": 0
+    },
+    {
+        "numberofprojects": "",
+        "name": "",
+        "description": "",
+        "repourl": "",
+        "liveurl": "",
+        "studentid": "",
+        "id": 3,
+        "creation": "2019-12-11T18:08:21.270Z"
+    },
+    {
+        "numberofprojects": "43",
+        "name": "eleanor",
+        "description": "p2p economies",
+        "repourl": "github",
+        "liveurl": "http://localhost:3003",
+        "studentid": "qown3",
+        "id": 5,
+        "creation": "2019-12-11T18:18:34.769Z"
+    },
+    {
+        "numberofprojects": 0,
+        "name": "eleanor",
+        "description": "p2p economies",
+        "repourl": "github",
+        "liveurl": "http://localhost:3003",
+        "studentid": "qown4",
+        "id": 6,
+        "creation": "2019-12-11T18:21:17.006Z"
+    },
+    {
+        "numberofprojects": 0,
+        "name": "eleanor",
+        "description": "p2p economies",
+        "repourl": "github",
+        "liveurl": "http://localhost:3003",
+        "studentid": "qown4",
+        "id": 7,
+        "creation": "2019-12-11T18:21:35.607Z"
+    },
+    {
+        "numberofprojects": 17,
+        "name": "eleanor",
+        "description": "p2p economies",
+        "repourl": "github",
+        "liveurl": "http://localhost:3003",
+        "studentid": "qown5"
+    }
+]
