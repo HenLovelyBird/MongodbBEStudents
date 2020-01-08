@@ -1,5 +1,5 @@
 const express = require("express"); 
-const projectsRouter = require("./src/projects/projects");
+const studentsRouter = require("./src/students/students");
 const path = require("path")
 const cors = require("cors")
 const mongoose = require("mongoose")
@@ -17,7 +17,7 @@ const port = 3003; //port number can be changed but also in .env
 
 server.use(express.json()); 
 server.use(cors());
-server.use('/projects', projectsRouter)
+server.use('/students', studentsRouter)
 
 server.listen(port, () => { //port number and a callback, server run and listen to port
     console.log(`Howdy! Your Server is running on port ${port}`); //`${can change port number}`

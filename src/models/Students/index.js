@@ -14,12 +14,12 @@ const studentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    datOfBirth:{ 
-        type: Number,
+    dateOfBirth:{ 
+        type: Date,
         required: true
     }
 })
 
-const studentCollection = mongoose.model("Students", studentSchema)
+const studentCollection = mongoose.model("student", studentSchema)
 
 module.exports = studentCollection
