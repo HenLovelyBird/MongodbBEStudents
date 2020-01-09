@@ -6,6 +6,7 @@ const {check, validationResult, sanitize} = require("express-validator");
 const router = express.Router();
 // const filePath = path.join(__dirname, "students.json");
 const Student = require("../models/Students")
+const mongoose = require("mongoose")
 
 // const readFile = filePath => {
 //     const buffer = fs.readFileSync(filePath);
@@ -110,15 +111,16 @@ studentRouter.post("/", async (req, res)=>{
 //     fs.writeFileSync(filePath, JSON.stringify(projectsArray));
 //     res.status(201).send(`${newproject.id}`);
 // });// CREATE http://localhost:3000/projects/ to POST a single user
+mongoose.set('useFindAndModify', false);
 
 studentRouter.put("/:id", async (req, res)=>{
     delete req.body._id
-    const book = await Student.findOneAndUpdate(
+    const student = await Student.findOneAndUpdate(
         { _id: req.params.id },
         { $set: {...req.body}
     })
     if (student)
-        res.send(student)
+        res.send(student + "Your Entry was Updated!")
     else
         res.status(404).send(":/" + "Check User Id and try again")
 })
@@ -133,10 +135,13 @@ studentRouter.put("/:id", async (req, res)=>{
 //     res.send(modifyproject);
 // });// PUT http://localhost:3000/projects/ID to UPDATE a single user
 
+mongoose.set('useFindAndModify', false);
+
 studentRouter.delete("/:id", async(req, res)=>{
-    const result = await Student.findOneAndDelete({ _id: req.params.id })
+    const result = await Student.findOneAndDelete( {_id: req.params.id })
+    
     if (result)
-        res.send(result)
+        res.send("Entry was Deleted")
     else
         res.status(404).send(req.params_id + "Please check your id number and try again")
 })

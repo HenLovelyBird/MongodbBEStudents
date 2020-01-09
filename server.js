@@ -1,6 +1,7 @@
 const express = require("express"); 
 const studentsRouter = require("./src/students/students");
 const path = require("path")
+const listEndpoints = require("express-list-endpoints");
 const cors = require("cors")
 const mongoose = require("mongoose")
 const studentSchema = require("./src/models/Students")
@@ -17,8 +18,9 @@ const port = 3003; //port number can be changed but also in .env
 
 server.use(express.json()); 
 server.use(cors());
-server.use('/students', studentsRouter)
-
+server.use('/students', studentsRouter)//postman
+// server.use('/projects', projectsRouter)
+console.log(listEndpoints(server))
 server.listen(port, () => { //port number and a callback, server run and listen to port
     console.log(`Howdy! Your Server is running on port ${port}`); //`${can change port number}`
 });
