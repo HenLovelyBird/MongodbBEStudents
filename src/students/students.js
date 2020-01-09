@@ -37,7 +37,7 @@ studentRouter.get("/", async (req, res)=>{
 //READ http://localhost:3000/projects/ to GET all the projects
 
 studentRouter.get("/:id", async (req, res)=>{
-    const student = await Student.findOne({_id: req.params.id})
+    const student = await Student.findById({_id: req.params.id})
     if (student)
         res.send(student)
     else    
@@ -86,9 +86,9 @@ studentRouter.get("/:id", async (req, res)=>{
 studentRouter.post("/", async (req, res)=>{
 
     try{
-        const newStudent = await student.create(req.body)
+        const newStudent = await Student.create(req.body)
         newStudent.save()
-        res.send(newStudent + "Your Post was Created!")
+        res.status(201).send(newStudent + "Your Post was Created!")
     }
     catch(err){
         res.status(500).send(err)
