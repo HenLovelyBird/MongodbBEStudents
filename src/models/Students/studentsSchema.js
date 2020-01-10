@@ -1,4 +1,13 @@
 const mongoose = require("mongoose")
+const validator = require ("validator")
+
+const projectsSchema = new mongoose.Schema({
+    name: String,
+    description: String,
+    githubUrl: String,
+    quantity: Number
+    
+})
 
 const studentSchema = new mongoose.Schema({
     name: { 
@@ -17,7 +26,9 @@ const studentSchema = new mongoose.Schema({
     dateOfBirth:{ 
         type: Date,
         required: true
-    }
+    },
+
+    projects: [projectsSchema]
 })
 
 const studentCollection = mongoose.model("student", studentSchema)

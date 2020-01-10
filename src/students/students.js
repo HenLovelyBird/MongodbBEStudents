@@ -1,21 +1,17 @@
 const express = require("express");
-const {readFile, writeFile} = require("fs-extra");
-const path = require("path");
-const {check, validationResult, sanitize} = require("express-validator");
-// Bodies, params and queries must be validated with express-validator middleware
-const router = express.Router();
-// const filePath = path.join(__dirname, "students.json");
-const Student = require("../models/Students")
 const mongoose = require("mongoose")
+// const validator = require ("validator")
+const Student = require("../models/Students/studentsSchema.js")//studentsschema router with projectSchema embedded
+// const Project = require('.src/projects/projectsSchema')
+const { ObjectId } = require('mongodb')
 
-// const readFile = filePath => {
-//     const buffer = fs.readFileSync(filePath);
-//     const fileContent = buffer.toString();
-//     return (JSON.parse(fileContent));
-// };
-//req for projects i all
 
 const studentRouter = express.Router();
+
+
+//---------------------------------------------------------------------------------
+//                          CRUD related to students 
+//---------------------------------------------------------------------------------
 
 const readStudents = async () => {
     return await Student.find()
@@ -24,18 +20,10 @@ const readStudents = async () => {
 studentRouter.get("/", async (req, res)=>{
     if(req.query.name)
         return res.send(await Student.find({ name: req.query.name}))
-    const students = await Student.find({})
+    const students = await Student.find({name: "eleanor"})
     res.send(students)
 })
 
-// router.get('/', async (req, res) => {
-//   const buffer = await readFile(filePath);
-//   const fileContent = buffer.toString();
-//   const projectsArray = JSON.parse(fileContent);
-//     // console.log(projectsArray);
-//   res.send(projectsArray);
-// });
-//READ http://localhost:3000/projects/ to GET all the projects
 
 studentRouter.get("/:id", async (req, res)=>{
     const student = await Student.findById({_id: req.params.id})
@@ -43,49 +31,10 @@ studentRouter.get("/:id", async (req, res)=>{
         res.send(student)
     else    
         res.status(404).send(":(" + "Student Not Found")   
-})
+});
 
-// req for particular project id number
-// router.get('/:id', [sanitize("id").toInt()], async (req, res) => {
-//     const buffer = await readFile(filePath);
-//     const fileContent = buffer.toString();
-//     const projectsArray = JSON.parse(fileContent);
-//     const findproject = projectsArray.find(
-//         project => project.id === req.params.id
-//     );
-//     // console.log(req.params.id);
-//     if (findproject){
-//         res.send(findproject);
-//     } else {
-//         res.status(401).send(`project ${req.params.id} not found!`);
-//     }
-// });// READ http://localhost:3000/projects/1 to GET a single user by id
-
-// router.get("/", async (req, res, next) => {
-//     try {
-//       const buffer = await readFile(filePath);
-//       const fileContent = buffer.toString();
-//       const studentsArray = JSON.parse(fileContent);
-//       if (req.query && req.query.name) {
-//         const filteredStudents = studentsArray.filter(
-//           student =>
-//             student.hasOwnProperty("name") &&
-//             student.name.toLowerCase() === req.query.name.toLowerCase()
-//         );
-//         res.send(filteredstudents);
-//       } else {
-//         res.send(studentsArray);
-//       }
-//     } catch (error) {
-//       // if (error.code === "ENOENT") {
-//       //   next("SERVER ERROR - FILE NOT FOUND");
-//       // }
-//       next(error);
-//     }
-//   }); // GET http:localhost:3000/users?name=john to LIST the users filtered by name
 
 studentRouter.post("/", async (req, res)=>{
-
     try{
         const newStudent = await Student.create(req.body)
         newStudent.save()
@@ -96,21 +45,7 @@ studentRouter.post("/", async (req, res)=>{
     }
 })
 
-// router.post('/', async (req,res) => {  //in this POST I want to receive the entire obj array for a particular id and append it
-//     const buffer = await readFile(filePath);
-//     const fileContent = buffer.toString();
-//     const projectsArray = JSON.parse(fileContent);
-//     const newproject = {
-//         ...req.body, 
-//         id: projectsArray.length + 1, 
-//         numberofprojects: 5,
-//         creation: new Date(),
-        
-//     };
-//     projectsArray.push(newproject);
-//     fs.writeFileSync(filePath, JSON.stringify(projectsArray));
-//     res.status(201).send(`${newproject.id}`);
-// });// CREATE http://localhost:3000/projects/ to POST a single user
+
 mongoose.set('useFindAndModify', false);
 
 studentRouter.put("/:id", async (req, res)=>{
@@ -125,15 +60,6 @@ studentRouter.put("/:id", async (req, res)=>{
         res.status(404).send(":/" + "Check User Id and try again")
 })
 
-// router.put('/:id', async (req, res)=> {
-//     const modifyproject = req.body;
-//     const buffer = await readFile(filePath);
-//     const fileContent = buffer.toString();
-//     let projectsArray = JSON.parse(fileContent);
-//     projectsArray[Number.parseInt(req.params.id) -1] = modifyproject; //-1?
-//     await writeFile(filePath, JSON.stringify(projectsArray));
-//     res.send(modifyproject);
-// });// PUT http://localhost:3000/projects/ID to UPDATE a single user
 
 mongoose.set('useFindAndModify', false);
 
@@ -146,15 +72,68 @@ studentRouter.delete("/:id", async(req, res)=>{
         res.status(404).send(req.params_id + "Please check your id number and try again")
 })
 
-// router.delete('/:id', async (req, res) => {
-//     const buffer = await readFile(filePath);
-//     const fileContent = buffer.toString();
-//     const projectsArray = JSON.parse(fileContent);
-//     const keepProjects = projectsArray.filter(project => project.id !== req.params.id);
-    
-//     await writeFile(filePath, JSON.stringify(keepProjects));
-//     res.status(204);
-// }); // DELETE http://localhost:3000/projects/ to DELETE a single user
+//---------------------------------------------------------------------------------
+//                   CRUD related to students and their projects
+//---------------------------------------------------------------------------------
+//helper: https://github.com/bazuzu666/first-server-express/blob/master/src/services/students/index.js
+
+studentRouter.get("/:id/projects", async (req, res) => {
+    try {
+        const student = await Student.findbyId(req.params.id, { projects: 10 } );
+        res.send(student.projects);
+    } catch (error) {
+        res.send(error)
+    }
+}); 
+
+studentRouter.get("/:id/projects/:projid", async (req, res) => {
+    const student = await Student.findOne(
+        {
+            _id: new ObjectId(req.params.id), 
+            "projects._id": new ObjectId(req.params.projid) 
+        },
+
+        { "projects.$" : 2 } 
+    );
+   res.send(student);
+});
+
+studentRouter.post("/:id/projects", async (req, res) => {
+    try {
+      const newProject = req.body;
+  
+      const project = await Student.findByIdAndUpdate(req.params.id, {
+        $push: { projects: newProject }
+      });
+      res.send(project);
+    } catch (error) {
+      res.send(error);
+    }
+  });
+
+
+studentRouter.patch("/:id/projects/:projid", async (req, res) => {
+    try {
+        await Student.updateOne(
+            {_id: new ObjectId(req.params.id), 
+            "projects._id": new ObjectId(req.params.projid)}, 
+            {"projects.$": req.body })
+        response.send("ok")
+    } catch (err) {
+      response.send(err);
+    }
+})
+
+studentRouter.delete("/:id/projects/:projid", async (req, res) => {
+    try{
+    await Student.findByIdAndUpdate(req.params.id, { 
+        $pull: {projects: { _id: new ObjectId(req.params.projid)}}
+})  
+    res.send("ok")
+}   catch (err) {
+    res.send(err)
+}
+});
 
 
 module.exports = studentRouter;
