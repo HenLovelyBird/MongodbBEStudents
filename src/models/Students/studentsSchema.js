@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const validator = require ("validator")
+const { validator } = require ("mongoose-validator")
 
 const projectsSchema = new mongoose.Schema({
     name: String,
@@ -21,11 +21,18 @@ const studentSchema = new mongoose.Schema({
     },
     email: { 
         type: String,
-        required: true
+        required: true,
+        lowercase: true,
+        validate(value) {
+            if (!validator.isEmail(value)) {
+                throw new Error("Email is invalid!")
+            }
+        }
     },
+
     dateOfBirth:{ 
         type: Date,
-        required: true
+        required: false
     },
 
     projects: [projectsSchema]

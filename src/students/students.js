@@ -3,6 +3,7 @@ const mongoose = require("mongoose")
 // const validator = require ("validator")
 const Student = require("../models/Students/studentsSchema.js")//studentsschema router with projectSchema embedded
 // const Project = require('.src/projects/projectsSchema')
+const Project = require("../models/Projects/projectsSchema")
 const { ObjectId } = require('mongodb')
 
 
@@ -17,12 +18,20 @@ const readStudents = async () => {
     return await Student.find()
 }
 
-studentRouter.get("/", async (req, res)=>{
-    if(req.query.name)
-        return res.send(await Student.find({ name: req.query.name}))
-    const students = await Student.find({name: "eleanor"})
+studentRouter.get("/", async (req, res) => {
+    if(req.query.body)
+        return res.send (await Student.find({ students: req.query.body }))
+
+    const students = await Student.find({})
     res.send(students)
 })
+
+// studentRouter.get("/", async (req, res)=>{
+//     if(req.query.name)
+//         return res.send(await Student.find({ name: req.query.name}))
+//     const students = await Student.find({name: "eleanor"})
+//     res.send(students)
+// })
 
 
 studentRouter.get("/:id", async (req, res)=>{
@@ -102,10 +111,10 @@ studentRouter.post("/:id/projects", async (req, res) => {
     try {
       const newProject = req.body;
   
-      const project = await Student.findByIdAndUpdate(req.params.id, {
+      const Project = await Student.findByIdAndUpdate(req.params.id, {
         $push: { projects: newProject }
       });
-      res.send(project);
+      res.send(Project);
     } catch (error) {
       res.send(error);
     }
